@@ -35,11 +35,8 @@ def main():
 
     # simulation phase
 
-    # iterate through the file reference string, adding/replacing cache units as needed
-    for r in referenceString:
-        # for the file reference, get the list of cache units on disk
-        cacheUnits = fileSystem[r]
-        cacheManager(cacheUnits)
+    simulateCaching(referenceString, cache, cacheSize, replacementAlgorithm, fileSystem)
+
 
 
 def cacheManager(cacheUnits):
@@ -64,3 +61,10 @@ def replaceCacheUnit(cacheUnitID : int, cacheMiss : bool):
         leastFrequentlyUsed(cacheUnitID)
     else:
         leastRecentlyUsed(cacheUnitID)
+
+def simulateCaching(refenceString, cache, cacheSize, replacementAlgorithm, fileSystem):
+    # iterate through the file reference string, adding/replacing cache units as needed
+    for r in referenceString:
+        # for the file reference, get the list of cache units on disk
+        cacheUnits = fileSystem[r]
+        cacheManager(cacheUnits)
