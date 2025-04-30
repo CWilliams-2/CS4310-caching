@@ -28,19 +28,19 @@ public class CacheManagement {
         int numVals = 1000;
 
         System.out.println("Completely random references");
-        runMultipleTrials('f', cacheSize, cacheSize, false, false);
-        runMultipleTrials('r', cacheSize, cacheSize, false, false);
-
-        runMultipleTrials('f', cacheSize, 10 * cacheSize, false, false);
+        runMultipleTrials('i', cacheSize, 10 * cacheSize, false, false);
         runMultipleTrials('r', cacheSize, 10 * cacheSize, false, false);
+        runMultipleTrials('f', cacheSize, 10 * cacheSize, false, false);
 
         System.out.println("Compltely random references with prefetching");
-        runMultipleTrials('f', cacheSize, 10 * cacheSize, true, false);
+        runMultipleTrials('i', cacheSize, 10 * cacheSize, true, false);
         runMultipleTrials('r', cacheSize, 10 * cacheSize, true, false);
+        runMultipleTrials('f', cacheSize, 10 * cacheSize, true, false);
 
         System.out.println("Random references with some locality with prefetching");
-        runMultipleTrials('f', cacheSize, 10 * cacheSize, true, true);
+        runMultipleTrials('i', cacheSize, 10 * cacheSize, true, true);
         runMultipleTrials('r', cacheSize, 10 * cacheSize, true, true);
+        runMultipleTrials('f', cacheSize, 10 * cacheSize, true, true);
 
         // Cache fifoCache = new FIFOCache(cacheSize);
         // int[] res = simulateCaching(arr, fifoCache);
@@ -132,7 +132,7 @@ public class CacheManagement {
         System.out.printf("Cache: %c, Capacity: %d, MaxVal: %d\n", cacheType, capacity, maxVal);
 
         int numTrials = 1000; // hard-code for now
-        int arrLen = 1000; // hard-code for now
+        int numReferences = 1000; // hard-code for now
 
         // for (int i=0; i<numVals; i++) {
         //     System.out.println(arr[i]);
@@ -143,22 +143,24 @@ public class CacheManagement {
         for (int i=0; i<numTrials; i++) {
             Cache cache;
             switch(cacheType) {
-                case 'f':
+                case 'i':
                     cache = new FIFOCache(capacity);
                     break;
                 case 'r':
                     cache = new LRUCache(capacity);
                     break;
+                case 'f':
+                    cache = new LFUCache(capacity);
                 default:
                     cache = new FIFOCache(capacity);
             }
             
             int[] references;
             if (semilocal) {
-                references = generateSemiLocal(arrLen, maxVal);
+                references = generateSemiLocal(numReferences, maxVal);
             }
             else {
-                references = generateRandom(arrLen, maxVal);
+                references = generateRandom(numReferences, maxVal);
             }
             int[] res = simulateCaching(references, cache, prefetching, maxVal);
             misses[i] = res[0];
